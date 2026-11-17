@@ -20,3 +20,11 @@ test('1–4 lines, scoring, level threshold and speed',()=>{for(let n=1;n<=4;n++
 test('combo, energy cap, pulse and mode isolation',()=>{for(const mode of ['classic','galaxy']){const g=new GalaxyGame(mode);clearRows(g,4);clearRows(g,4);assert.equal(g.score,1650);assert.equal(g.energy,mode==='classic'?0:100);g.board[19][0]='J';g.board[18][1]='L';g.pulse();assert.equal(g.board[19][mode==='classic'?0:1],mode==='classic'?'J':'L');assert.equal(g.lines,8);assert.equal(g.energy,0);g.hard();assert.equal(g.combo,-1)}});
 test('gravity, soft drop, lock delay and pause freeze',()=>{const g=new GalaxyGame();g.spawn('O');g.tick(900);assert.equal(g.y,1);g.soft();assert.equal(g.score,1);g.y=g.landing();g.tick(200);g.pause();const before=JSON.stringify(g);g.tick(9999);g.move(1);g.hard();assert.equal(JSON.stringify(g),before);g.pause();g.tick(280);assert.equal(g.board[19][4],'O')});
 test('top out and fresh run',()=>{const g=new GalaxyGame();for(let i=0;i<40&&g.state==='playing';i++)g.hard();assert.equal(g.state,'over');const fresh=new GalaxyGame();assert.equal(fresh.score,0);assert.equal(fresh.state,'playing');assert(fresh.board.flat().every(x=>x===null))});
+test('duel players have independent boards and equal bag sequences at unequal speeds',()=>{
+  function source(){let seed=128;return ()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296)}
+  const players=[0,1].map(()=>new GalaxyGame('classic',()=>{},source()));
+  const sequences=players.map(player=>Array.from({length:100},()=>{const type=player.type;player.spawn();return type}));
+  assert.deepEqual(...sequences);
+  players[0].hard();
+  assert(players[1].board.flat().every(cell=>cell===null));
+});

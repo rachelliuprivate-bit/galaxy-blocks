@@ -18,13 +18,13 @@ function cells(type,r=0){
 }
 const emptyRow=()=>Array(10).fill(null);
 class GalaxyGame {
- constructor(mode='classic',emit=()=>{}){
- Object.assign(this,{mode,emit,board:Array.from({length:20},emptyRow),queue:[],score:0,lines:0,combo:-1,energy:0,held:null,used:false,state:'playing'});
+ constructor(mode='classic',emit=()=>{},random=Math.random){
+ Object.assign(this,{mode,emit,random,board:Array.from({length:20},emptyRow),queue:[],score:0,lines:0,combo:-1,energy:0,held:null,used:false,state:'playing'});
  this.spawn();
  }
  get level(){return 1+Math.floor(this.lines/10)}
  get interval(){return Math.max(75,900*Math.pow(.84,this.level-1))}
- fill(){while(this.queue.length<5){const bag=Object.keys(SHAPES);for(let i=6;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]]}this.queue.push(...bag)}}
+ fill(){while(this.queue.length<5){const bag=Object.keys(SHAPES);for(let i=6;i>0;i--){const j=Math.floor(this.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]]}this.queue.push(...bag)}}
  spawn(type){this.fill();this.type=type||this.queue.shift();this.fill();this.x=this.type==='O'?4:3;this.y=this.type==='I'?-1:0;this.r=0;this.gravity=this.lock=this.resets=0;
  if(!this.fits(this.x,this.y,this.r))this.end()}
  end(){this.state='over';this.emit('over')}

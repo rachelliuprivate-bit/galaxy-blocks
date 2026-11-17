@@ -19,7 +19,7 @@ function preview(id,type){const canvas=$(id),c=canvas.getContext('2d'),w=canvas.
  const list=cells(type),xs=list.map(v=>v[0]),ys=list.map(v=>v[1]),s=23;
  piece(c,type,0,(w-(Math.max(...xs)+Math.min(...xs)+1)*s)/2,(h-(Math.max(...ys)+Math.min(...ys)+1)*s)/2,s)}
 const demo=['...T......','..TTT...SS','.OOJJ..SS.','.OOJ..LLL.','ZZ.J..LTTT','.ZZIIII.T.','LLLSS.JJOO','L.SS.JJ.OO'];
-function render(){
+function drawField(board,game,flashes=[],fx=[]){
  board.clearRect(0,0,320,640);board.fillStyle='#0d1020';board.fillRect(0,0,320,640);
  board.strokeStyle='#25263c';board.lineWidth=.8;board.beginPath();for(let i=1;i<20;i++){board.moveTo(0,i*32+.5);board.lineTo(320,i*32+.5);if(i<10){board.moveTo(i*32+.5,0);board.lineTo(i*32+.5,640)}}board.stroke();
  if(!game){demo.forEach((row,i)=>[...row].forEach((p,x)=>{if(p!=='.')block(board,x*32,(20-demo.length+i)*32,32,p)}));piece(board,'T',0,96,96,32);piece(board,'T',0,96,320,32,true)}
@@ -34,6 +34,7 @@ function put(id,value){const el=$(id),s=String(value);if(el.textContent!==s)el.t
 let lastPreview='';
 function sync(){
  const score=game?.score||0,state=game?.state||'ready';
+ $('duoMode').disabled=state==='playing';
  if(score>best){best=score;save(mode,best)}
  put('best',best.toLocaleString());put('score',String(score).padStart(6,'0'));put('level',String(game?.level||1).padStart(2,'0'));put('lines',String(game?.lines||0).padStart(2,'0'));
  put('sound',sound?'◖))　音效开启':'◖×　音效关闭');put('start',state==='playing'?'Ⅱ　暂停游戏':state==='paused'?'▶　继续游戏':state==='over'?'▶　再玩一次':'▶　开始游戏');put('status',{ready:'准备就绪',playing:'游戏进行中',paused:'已暂停',over:'游戏结束'}[state]);
@@ -63,5 +64,5 @@ function frame(t){const dt=Math.min(50,Math.max(0,t-last));last=t;if(t-skyTime>4
  if(game?.state==='playing'){for(const [k,delay] of keys){if(delay<=dt){act(k);keys.set(k,k==='Down'?32:55)}else keys.set(k,delay-dt)}game.tick(dt);
  for(const f of flashes)f.life-=dt;flashes=flashes.filter(f=>f.life>0);
  for(const p of fx){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=dt*.00045}fx=fx.filter(p=>p.life>0);messageTime-=dt;if(messageTime<=0)$('notice').textContent='';sync()}
- render();requestAnimationFrame(frame)}
+ if(!document.body.classList.contains('duelMode'))drawField(board,game,flashes,fx);requestAnimationFrame(frame)}
 sync();requestAnimationFrame(frame);
