@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#07101f">
+    <title>星球方块 · 俄罗斯方块</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="page-heading">
+        <p class="eyebrow">COSMIC ARCADE · 01</p>
+        <h1>星球方块</h1>
+        <p class="subtitle">在星际之间，拼出你的下一步。</p>
+      </header>
+
+      <section class="game-layout" aria-label="俄罗斯方块游戏">
+        <div class="board-column">
+          <div class="board-frame">
+            <canvas id="game-canvas" width="300" height="600" aria-label="俄罗斯方块游戏区域"></canvas>
+            <div class="game-overlay" id="game-overlay">
+              <p class="overlay-kicker" id="overlay-kicker">准备好了吗？</p>
+              <h2 id="overlay-title">开始你的旅程</h2>
+              <p class="overlay-copy" id="overlay-copy">移动方块，填满整行，看看你能获得多少分。</p>
+              <button class="primary-button" id="overlay-button" type="button">开始游戏</button>
+            </div>
+          </div>
+          <div class="touch-controls" aria-label="触屏操作">
+            <button type="button" data-action="left" aria-label="向左移动">←</button>
+            <button type="button" data-action="rotate" aria-label="旋转方块">旋转</button>
+            <button type="button" data-action="right" aria-label="向右移动">→</button>
+            <button type="button" data-action="down" aria-label="加速下落">↓</button>
+            <button type="button" data-action="drop" aria-label="直接落底">落底</button>
+          </div>
+        </div>
+
+        <aside class="info-panel">
+          <div class="score-card">
+            <span class="card-label">当前得分 <span class="english-label">SCORE</span></span>
+            <strong id="score">000000</strong>
+          </div>
+          <section class="music-card" aria-labelledby="music-title">
+            <div class="music-heading">
+              <h2 id="music-title">星际配乐</h2>
+              <span id="music-status" aria-live="polite">开始游戏后播放</span>
+            </div>
+            <button class="music-toggle" id="music-toggle" type="button" aria-pressed="true">背景音乐：开</button>
+            <label class="volume-label" for="music-volume">
+              音量 <span id="volume-value">35%</span>
+            </label>
+            <input id="music-volume" type="range" min="0" max="100" value="35" aria-label="背景音乐音量">
+          </section>
+          <div class="stats-row">
+            <div class="stat-card">
+              <span class="card-label">消除行数</span>
+              <strong id="lines">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="card-label">游戏状态</span>
+              <strong class="status-value" id="status">待开始</strong>
+            </div>
+          </div>
+          <div class="game-actions">
+            <button class="action-button" id="pause-button" type="button" disabled>暂停</button>
+            <button class="action-button cancel-button" id="cancel-button" type="button" disabled>取消本局</button>
+            <button class="restart-button" id="restart-button" type="button">重新开始</button>
+          </div>
+
+          <section class="help-card">
+            <h2>操作指南</h2>
+            <ul>
+              <li><kbd>←</kbd><kbd>→</kbd><span>左右移动</span></li>
+              <li><kbd>↑</kbd><span>旋转方块</span></li>
+              <li><kbd>↓</kbd><span>加速下落</span></li>
+              <li><kbd>空格</kbd><span>直接落到底部</span></li>
+              <li><kbd>P</kbd><span>暂停 / 继续</span></li>
+            </ul>
+            <p class="help-note">也可以使用游戏区下方的触屏按钮。</p>
+          </section>
+          <p class="edition-note">七种方块 · 无尽星际挑战</p>
+        </aside>
+      </section>
+      <footer>专注每一次落下，拼出属于你的星河。</footer>
+    </main>
+    <script src="game.js"></script>
+  </body>
+</html>
